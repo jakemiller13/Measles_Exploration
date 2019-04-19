@@ -12,6 +12,7 @@ Created on Thu Apr 18 19:27:35 2019
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 # Load in dataframe. Also print disclaimer from WHO
 disc = pd.read_excel('measlescasesbycountrybymonth.xls',
@@ -30,7 +31,6 @@ regions, regions_counts = np.unique(df['Region'], return_counts = True)
 print('\nRegions:\n' + str(regions))
 
 # Plot cases over time
-# TODO need to test summation when using regions
 def plot_cases(region = None,
                country = None,
                plot_all_years = False,
@@ -48,13 +48,23 @@ def plot_cases(region = None,
         location = country
     
     if plot_all_years == True:
+        duration = 'Per Year'
         x_plot = np.unique(df['Year'])
         y_plot = [df[(df[loc_col] == location) & (df['Year'] == i)].\
                      iloc[:,4:].sum().sum() for i in x_plot]
+        y_ticks = None
     else:
+        duration = 'in {}'.format(year)
         x_plot = df.columns[4:]
         y_plot = df[(df[loc_col] == location) & (df['Year'] == year)].\
                     iloc[:,4:].values[0]
+        y_ticks = range(math.floor(min(y_plot)), math.ceil(max(y_plot)) + 1)
     
-    plt.plot(x_plot, y_plot)
+    plt.plot(x_plot, y_plot, color = 'red', linewidth = 2)
+    plt.grid(which = 'major')
+    plt.xticks(rotation = 45, ha = 'right', position = (0, 0.01))
+    plt.yticks(y_ticks)
+    plt.ylabel('Confirmed Cases')
+    plt.title('Measles Cases {} in {}'.format(duration, location))
+    plt.show()
     # TODO make plots pretty
