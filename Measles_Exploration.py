@@ -53,13 +53,11 @@ def plot_cases(region = None,
         x_plot = np.unique(df['Year'])
         y_plot = [df[(df[loc_col] == location) & (df['Year'] == i)].\
                      iloc[:,4:].sum().sum() for i in x_plot]
-#        y_ticks = None
     else:
         duration = 'in {}'.format(year)
         x_plot = df.columns[4:]
         y_plot = df[(df[loc_col] == location) & (df['Year'] == year)].\
                     iloc[:,4:].values[0]
-#        y_ticks = range(math.floor(min(y_plot)), math.ceil(max(y_plot)) + 1)
     
     plt.plot(x_plot, y_plot, color = 'red', linewidth = 2)
     plt.grid(which = 'major')
